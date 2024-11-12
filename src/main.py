@@ -12,6 +12,7 @@ def is_image_file(file_path):
 
 def main():
     app: AppState = AppState()
+    app.create_gui().run()
 
 if __name__ == '__main__':
     main()
