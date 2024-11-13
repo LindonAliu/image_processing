@@ -7,9 +7,6 @@
 
 from app import AppState
 
-def is_image_file(file_path):
-    return file_path.endswith('.jpg') or file_path.endswith('.png')
-
 def main():
     app: AppState = AppState()
     app.create_gui().run()
