@@ -4,8 +4,11 @@
 ## File description:
 ## gui: utils function for creating GUI elements
 ##
+
 from tkinter import filedialog, messagebox
-from tkinter import Button, Label, Tk, Listbox, Frame, LEFT, RIGHT, BOTH, Y
+from tkinter import Button, Label, Tk, Listbox, Frame
+from tkinter import LEFT, RIGHT, BOTH, Y
+
 from PIL import Image, ImageTk
 import numpy as np
 from typing import Tuple
