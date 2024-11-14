@@ -5,9 +5,8 @@
 ## gui: utils function for creating GUI elements
 ##
 
-import tkinter as tk
 from tkinter import filedialog, messagebox
-from tkinter import Button, Label, Tk
+from tkinter import Button, Label, Tk, Listbox
 
 from PIL import Image, ImageTk
 
@@ -19,6 +18,24 @@ def import_image_action(update_filepath_callback: callable) -> None:
     filename = filedialog.askopenfilename()
     if filename:
         update_filepath_callback(filename)
+
+def on_filter_select(event, listbox, filters, apply_filter_callback):
+    selection = listbox.curselection()
+    if selection:
+        filter_name = listbox.get(selection[0])
+        filter_function = filters[filter_name]
+        apply_filter_callback(filter_function)
+
+def create_listbox(window: Tk, filters: dict, postion: Tuple[int, int], apply_filter_callback: callable) -> Listbox:
+    """Create a listbox that allows the user to select a filter."""
+    listbox: Listbox = Listbox(window)
+    listbox.place(x=postion[0], y=postion[1])
+
+    for filter_name in filters.keys():
+        listbox.insert(0, filter_name)
+
+    listbox.bind("<<ListboxSelect>>", lambda event: on_filter_select(event, listbox, filters, apply_filter_callback))
+    return listbox
 
 def create_button(window: Tk, text: str, position: Tuple[int, int], command: callable) -> Button:
     """Create a button that allows the user to import an image."""
