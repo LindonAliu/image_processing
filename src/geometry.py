@@ -1,19 +1,23 @@
-import cv2
+##
+## Chung Ang University Project, 2024
+## image_processing
+## File description:
+## geometry: the geometrical operation made on the input image
+##
+
 import numpy as np
-import random
 
-def img_to_fisheye(file, k):
-    # file : input file
+def img_to_fisheye(img, k):
+    # img : input img
     # k : distortion parameter
-
-    img = cv2.imread(file)
     height, width = img.shape[:2]
 
+    # if input image is not a square, we make it a square
     if height != width: 
-        dim = np.min([height, width])
+        dim : int = np.min([height, width])
         center_x, center_y = round(height/2), round(width/2)
-        half = round(dim/2)
-        img = img[ center_x-half:center_x+half, center_y-half:center_y+half ] 
+        half : int = round(dim/2)
+        img = img[center_x - half:center_x + half, center_y - half:center_y + half] 
         width, height = dim, dim
 
     center_x, center_y = width/2, height/2
@@ -22,13 +26,13 @@ def img_to_fisheye(file, k):
     # calculates the barrel deformation
     new_coordinates_x, new_coordinates_y = [], []
 
-    for y in range(width):
-        for x in range(height):
+    for y in range(height):
+        for x in range(width):
 
             dx = x - center_x
             dy = y - center_y
 
-            r = np.sqrt(dx**2+dy**2) #source radius
+            r = np.sqrt(dx**2 + dy**2) #source radius
             rd = r*(1 + k*r**2) #distorted radius
 
             if r != 0:
@@ -36,24 +40,18 @@ def img_to_fisheye(file, k):
             else :
                 scale = 1
 
-            new_x = int(center_x + (dx * scale))
+            new_x = int(center_x + (dx * scale)) #coordinates of transformed points
             new_y = int(center_y + (dy * scale))
             
             if 0 <= new_y < width and 0 <= new_x < height:
                 dest[x, y] = img[new_x, new_y]
-                new_coordinates_x.append(x)
+                new_coordinates_x.append(x) #to get new dimension of img
                 new_coordinates_y.append(y)
-
-    start_point = (np.min(np.array(new_coordinates_x)), np.max(np.array(new_coordinates_y)))  # Coordonnées (x, y)
-    end_point = (np.max(np.array(new_coordinates_x)), np.max(np.array(new_coordinates_y)))  # Coordonnées (x, y)
-    cv2.line(dest, start_point, end_point, (255, 0, 0), 3)
 
     x_min = np.min(np.array(new_coordinates_x))
     x_max = np.max(np.array(new_coordinates_x))
-    y_min = np.min(np.array(new_coordinates_y))
-    y_max = np.max(np.array(new_coordinates_y))
 
-    dest_resized = dest[x_min:x_max, y_min:y_max]
+    dest_resized = dest[x_min:x_max, x_min:x_max]
 
     round_mask = get_round_mask(dest_resized)
     dest = add_mask(dest_resized, round_mask)
@@ -68,9 +66,9 @@ def get_round_mask(src):
     dest = np.ones((width, height))*255
 
     center = round(width/2)
-    r_max = round( np.sqrt( (height-center)**2 )  ) - 2
-    r_middle = r_max - round(1/32*r_max)
-    r_little = r_max - round(2/32*r_max)
+    r_max = round( np.sqrt( (height - center)**2 )  ) - 2
+    r_middle = r_max - round(1/32 * r_max)
+    r_little = r_max - round(2/32 * r_max)
     
     for x in range(width):
         for y in range(height):
@@ -86,6 +84,8 @@ def get_round_mask(src):
     return dest
 
 def add_mask(src, mask):
+    # get behavior when adding mask to img (darker borders)
+
     dest = np.ones_like(src)
     width, height = src.shape[:2]
 
@@ -103,6 +103,7 @@ def add_mask(src, mask):
     return dest
 
 def get_darker(src, index):
+    # darkening function
     dest = np.zeros(3)
 
     for i in range(3):
@@ -114,15 +115,16 @@ def get_darker(src, index):
     return dest
 
 def add_blur(src, mask): 
+    # add blur where the mask is
+
     width, height = src.shape[:2]
     padding = 3 // 2
     blurred_image = src.copy()
 
-    # Parcours de tous les pixels de l'image
     for x in range(padding, height - padding):
         for y in range(padding, width - padding):
             if mask[x, y] != 255:  
-                kernel_region = src[x-padding:x+padding+1, y-padding:y+padding+1]
+                kernel_region = src[x - padding:x + padding + 1, y - padding:y + padding + 1]
                 blurred_image[x, y] = np.mean(kernel_region, axis=(0, 1))
             
     return blurred_image
