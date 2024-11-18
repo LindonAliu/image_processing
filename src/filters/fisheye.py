@@ -104,13 +104,13 @@ def add_mask(src, mask):
 
 def get_darker(src, index):
     # darkening function
-    dest = np.zeros(3)
+    dest = np.zeros(3, dtype=int)
 
     for i in range(3):
-        if src[i] - index < 0:
+        if int(src[i]) - int(index) < 0:
             dest[i] = 0
         else: 
-            dest[i] = src[i] - index
+            dest[i] = int(src[i]) - int(index)
 
     return dest
 
