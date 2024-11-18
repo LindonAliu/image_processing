@@ -32,8 +32,8 @@ def img_to_fisheye(img, k):
             dx = x - center_x
             dy = y - center_y
 
-            r = np.sqrt(dx**2 + dy**2) #source radius
-            rd = r*(1 + k * r**2) #distorted radius
+            r = np.sqrt(dx ** 2 + dy ** 2) #source radius
+            rd = r * (1 + k * r ** 2) #distorted radius
 
             if r != 0:
                 scale = rd/r
@@ -66,13 +66,13 @@ def get_round_mask(src):
     dest = np.ones((width, height)) * 255
 
     center = round(width/2)
-    r_max = round( np.sqrt( (height - center)**2 )  ) - 2
+    r_max = round(np.sqrt((height - center) ** 2)) - 2
     r_middle = r_max - round(1 / 32 * r_max)
     r_little = r_max - round(2 / 32 * r_max)
     
     for x in range(width):
         for y in range(height):
-            r = np.sqrt( (x-center)**2 + (y-center)**2 )
+            r = np.sqrt((x - center) ** 2 + (y - center) ** 2)
             if r >= r_max :
                 dest[x, y] = 0
             elif r >= r_middle:
