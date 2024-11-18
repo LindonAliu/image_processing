@@ -1,5 +1,6 @@
 import cv2
 import numpy as np
+import random
 
 def img_to_fisheye(file, k):
     # file : input file
@@ -49,15 +50,74 @@ def img_to_fisheye(file, k):
 
     dest_resized = dest[x_min:x_max, y_min:y_max]
 
-    round_mask = get_round_mask(radius)
-
-    cv2.imshow("Resized", dest_resized)
-    cv2.waitKey(0)
-    cv2.destroyAllWindows()
-
+    round_mask = get_round_mask(dest_resized)
+    dest = add_mask(dest_resized, round_mask)
+    dest = add_blur(dest, round_mask)
 
     return dest
 
 
-def get_round_mask(radius: int):
+def get_round_mask(src):
     # get a round mask to add fisheye round border to image 
+    height, width = src.shape[:2]
+    dest = np.ones((width, height))*255
+
+    center = round(width/2)
+    r_max = round( np.sqrt( (height-center)**2 )  ) - 2
+    r_middle = r_max - round(1/32*r_max)
+    r_little = r_max - round(2/32*r_max)
+    
+    for x in range(width):
+        for y in range(height):
+            r = np.sqrt( (x-center)**2 + (y-center)**2 )
+            if r >= r_max :
+                dest[x, y] = 0
+            elif r >= r_middle:
+                dest[x, y] = 1
+            elif r >= r_little :
+                dest[x, y] = 2
+
+
+    return dest
+
+def add_mask(src, mask):
+    dest = np.ones_like(src)
+    width, height = src.shape[:2]
+
+    for x in range(width):
+        for y in range(height):
+            if mask[x,y] == 0:
+                dest[x,y] = np.array([0,0,0])
+            elif mask[x,y] == 1:
+                dest[x,y] = get_darker(src[x,y], 80)
+            elif mask[x,y] == 2:
+                dest[x,y] = get_darker(src[x,y], 50)
+            else:
+                dest[x, y] = get_darker(src[x,y], 20)
+
+    return dest
+
+def get_darker(src, index):
+    dest = np.zeros(3)
+
+    for i in range(3):
+        if src[i] - index < 0:
+            dest[i] = 0
+        else: 
+            dest[i] = src[i] - index
+
+    return dest
+
+def add_blur(src, mask): 
+    width, height = src.shape[:2]
+    padding = 3 // 2
+    blurred_image = src.copy()
+
+    # Parcours de tous les pixels de l'image
+    for x in range(padding, height - padding):
+        for y in range(padding, width - padding):
+            if mask[x, y] != 255:  
+                kernel_region = src[x-padding:x+padding+1, y-padding:y+padding+1]
+                blurred_image[x, y] = np.mean(kernel_region, axis=(0, 1))
+            
+    return blurred_image
