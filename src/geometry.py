@@ -9,12 +9,18 @@ def img_to_fisheye(file, k):
     img = cv2.imread(file)
     height, width = img.shape[:2]
 
+    if height != width: 
+        dim = np.min([height, width])
+        center_x, center_y = round(height/2), round(width/2)
+        half = round(dim/2)
+        img = img[ center_x-half:center_x+half, center_y-half:center_y+half ] 
+        width, height = dim, dim
+
+    center_x, center_y = width/2, height/2
     dest = np.zeros_like(img)
 
     # calculates the barrel deformation
-    center_x, center_y = width/2, height/2
     new_coordinates_x, new_coordinates_y = [], []
-
 
     for y in range(width):
         for x in range(height):
@@ -24,7 +30,6 @@ def img_to_fisheye(file, k):
 
             r = np.sqrt(dx**2+dy**2) #source radius
             rd = r*(1 + k*r**2) #distorted radius
-
 
             if r != 0:
                 scale = rd/r
