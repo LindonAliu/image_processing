@@ -14,13 +14,13 @@ def img_to_fisheye(img, k):
 
     # if input image is not a square, we make it a square
     if height != width: 
-        dim : int = np.min([height, width])
-        center_x, center_y = round(height/2), round(width/2)
-        half : int = round(dim/2)
+        dim: int = np.min([height, width])
+        center_x, center_y = round(height / 2), round(width / 2)
+        half: int = round(dim / 2)
         img = img[center_x - half:center_x + half, center_y - half:center_y + half] 
         width, height = dim, dim
 
-    center_x, center_y = width/2, height/2
+    center_x, center_y = width / 2, height / 2
     dest = np.zeros_like(img)
 
     # calculates the barrel deformation
@@ -33,7 +33,7 @@ def img_to_fisheye(img, k):
             dy = y - center_y
 
             r = np.sqrt(dx**2 + dy**2) #source radius
-            rd = r*(1 + k*r**2) #distorted radius
+            rd = r*(1 + k * r**2) #distorted radius
 
             if r != 0:
                 scale = rd/r
@@ -63,12 +63,12 @@ def img_to_fisheye(img, k):
 def get_round_mask(src):
     # get a round mask to add fisheye round border to image 
     height, width = src.shape[:2]
-    dest = np.ones((width, height))*255
+    dest = np.ones((width, height)) * 255
 
     center = round(width/2)
     r_max = round( np.sqrt( (height - center)**2 )  ) - 2
-    r_middle = r_max - round(1/32 * r_max)
-    r_little = r_max - round(2/32 * r_max)
+    r_middle = r_max - round(1 / 32 * r_max)
+    r_little = r_max - round(2 / 32 * r_max)
     
     for x in range(width):
         for y in range(height):
