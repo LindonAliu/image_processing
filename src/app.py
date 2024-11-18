@@ -17,6 +17,8 @@ import cv2
 import numpy as np
 from tkinter import filedialog
 
+from filters.fisheye import img_to_fisheye
+
 def is_image_file(filepath) -> bool:
     return filepath.endswith('.jpg') or filepath.endswith('.png')
 
@@ -35,7 +37,8 @@ class AppState:
             "Original": lambda _: self.original_pixel_array.copy(),
             "Grayscale": lambda pixel_array: cv2.cvtColor(pixel_array, cv2.COLOR_RGB2GRAY),
             "Invert": lambda pixel_array: 255 - pixel_array,
-            "Blur": lambda pixel_array: cv2.GaussianBlur(pixel_array, (21, 21), 0)
+            "Blur": lambda pixel_array: cv2.GaussianBlur(pixel_array, (21, 21), 0),
+            "Fisheye": lambda pixel_array: img_to_fisheye(pixel_array, 0.00005)
         }
 
         create_filter_frame(self.window, filters, self.apply_filter, self.import_image, self.save_image)
