@@ -5,9 +5,9 @@
 ## gui: utils function for creating GUI elements
 ##
 
-from tkinter import filedialog, messagebox
+from tkinter import filedialog, messagebox, Canvas, Scrollbar
 from tkinter import Button, Label, Tk, Listbox, Frame
-from tkinter import LEFT, RIGHT, BOTH, Y
+from tkinter import LEFT, RIGHT, BOTH, Y, HORIZONTAL, VERTICAL, BOTTOM, X
 
 from PIL import Image, ImageTk
 import numpy as np
@@ -48,17 +48,25 @@ def create_filter_frame(window: Tk, filters: dict, apply_filter_callback: callab
 
     return frame
 
-def create_image_frame(window: Tk) -> Tuple[Frame, Label]:
+def create_image_frame(window: Tk) -> Tuple[Canvas, Label]:
     """Create a frame to display the image."""
     frame = Frame(window)
     frame.pack(side=RIGHT, expand=True, fill=BOTH)
 
-    label = Label(frame)
-    label.pack(expand=True)
+    canvas = Canvas(frame, bg='white')
+    canvas.pack(side=LEFT, expand=True, fill=BOTH)
 
-    return frame, label
+    hbar = Scrollbar(frame, orient=HORIZONTAL, command=canvas.xview)
+    hbar.pack(side=BOTTOM, fill=X)
+    vbar = Scrollbar(frame, orient=VERTICAL, command=canvas.yview)
+    vbar.pack(side=RIGHT, fill=Y)
 
-def change_image(image_label: Label, image_source) -> None:
+    canvas.config(xscrollcommand=hbar.set, yscrollcommand=vbar.set)
+    canvas.config(scrollregion=canvas.bbox("all"))
+
+    return canvas, canvas
+
+def change_image(canvas: Canvas, image_source) -> None:
     """Change the image displayed in the window."""
     if isinstance(image_source, str):
         # image_source is a file path
@@ -78,12 +86,10 @@ def change_image(image_label: Label, image_source) -> None:
         display_error_message("Error: Invalid image source.")
         return
 
-    image = image.resize((600, 400), Image.LANCZOS)
-    image = ImageTk.PhotoImage(image)
-
-    image_label.configure(image=image)
-    image_label.image = image
-    return
+    image_tk = ImageTk.PhotoImage(image)
+    canvas.create_image(0, 0, anchor="nw", image=image_tk)
+    canvas.image = image_tk
+    canvas.config(scrollregion=canvas.bbox("all"))
 
 def display_error_message(message: str) -> None:
     """Display an error message to the user."""
