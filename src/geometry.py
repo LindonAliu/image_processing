@@ -12,6 +12,8 @@ def img_to_fisheye(file, k):
 
     # calculates the barrel deformation
     center_x, center_y = width/2, height/2
+    new_coordinates_x, new_coordinates_y = [], []
+
 
     for y in range(width):
         for x in range(height):
@@ -33,7 +35,29 @@ def img_to_fisheye(file, k):
             
             if 0 <= new_y < width and 0 <= new_x < height:
                 dest[x, y] = img[new_x, new_y]
+                new_coordinates_x.append(x)
+                new_coordinates_y.append(y)
+
+    start_point = (np.min(np.array(new_coordinates_x)), np.max(np.array(new_coordinates_y)))  # Coordonnées (x, y)
+    end_point = (np.max(np.array(new_coordinates_x)), np.max(np.array(new_coordinates_y)))  # Coordonnées (x, y)
+    cv2.line(dest, start_point, end_point, (255, 0, 0), 3)
+
+    x_min = np.min(np.array(new_coordinates_x))
+    x_max = np.max(np.array(new_coordinates_x))
+    y_min = np.min(np.array(new_coordinates_y))
+    y_max = np.max(np.array(new_coordinates_y))
+
+    dest_resized = dest[x_min:x_max, y_min:y_max]
+
+    round_mask = get_round_mask(radius)
+
+    cv2.imshow("Resized", dest_resized)
+    cv2.waitKey(0)
+    cv2.destroyAllWindows()
+
 
     return dest
 
 
+def get_round_mask(radius: int):
+    # get a round mask to add fisheye round border to image 
