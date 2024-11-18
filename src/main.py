@@ -5,11 +5,11 @@
 ## main
 ##
 
-def is_image_file(file_path):
-    return file_path.endswith('.jpg') or file_path.endswith('.png')
+from app import AppState
 
 def main():
-    print('Hello, world!')
+    app: AppState = AppState()
+    app.create_gui().run()
 
 if __name__ == '__main__':
     main()

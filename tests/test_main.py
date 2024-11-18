@@ -1,4 +1,4 @@
-from src.main import is_image_file
+from app import is_image_file
 
 def test_is_image_file():
     assert is_image_file('test.jpg') == True
