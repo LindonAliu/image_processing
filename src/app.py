@@ -16,7 +16,7 @@ import os
 import cv2
 import numpy as np
 from tkinter import filedialog
-
+from filters.custom_filters import apply_sepia_filter, apply_black_and_white_filter, apply_vintage_filter, apply_grain_filter, apply_pop_art_filter, apply_painting_filter, radial_color_gradient, glass_distortion_effect, posterize_filter
 from filters.fisheye import img_to_fisheye
 
 def is_image_file(filepath) -> bool:
@@ -34,11 +34,16 @@ class AppState:
         self.window = create_window("Image Processing", 800, 600)
 
         filters = {
-            "Original": lambda _: self.original_pixel_array.copy(),
-            "Grayscale": lambda pixel_array: cv2.cvtColor(pixel_array, cv2.COLOR_RGB2GRAY),
-            "Invert": lambda pixel_array: 255 - pixel_array,
-            "Blur": lambda pixel_array: cv2.GaussianBlur(pixel_array, (21, 21), 0),
-            "Fisheye": lambda pixel_array: img_to_fisheye(pixel_array, 0.00005)
+            "Sepia": apply_sepia_filter,
+            "Black and white": apply_black_and_white_filter,
+            "Vintage": apply_vintage_filter,
+            "Grain": apply_grain_filter,
+            "Pop art": apply_pop_art_filter,
+            "Painting": apply_painting_filter,
+            "Warm to Cold Gradient": radial_color_gradient,
+            "Glass Distortion Effect": glass_distortion_effect,
+            "Posterize": posterize_filter,
+            "Fisheye": lambda pixel_array: img_to_fisheye(pixel_array, 0.00005),
         }
 
         create_filter_frame(self.window, filters, self.apply_filter, self.import_image, self.save_image)
