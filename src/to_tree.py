@@ -13,7 +13,7 @@ import os
 def to_tree(sphere):
     print(os.getcwd())
     img = get_random_image()
-    img = cv2.imread("CAU/image-processing/image_processing/sapin3.png")
+    img = cv2.imread("CAU/image-processing/image_processing/sapin.png")
 
     radius = sphere.shape[0]
 
@@ -26,7 +26,7 @@ def to_tree(sphere):
             if np.all(img[i, j] == marker):
                 width_cball += 1
             else:
-                if width_cball == 116:
+                if width_cball != 0:
                     width_cball = width_cball//2
                     sphere2 = resize(sphere, 2*width_cball/radius)
                 
@@ -35,7 +35,9 @@ def to_tree(sphere):
 
                     for k in range(2*width_cball):
                         for l in range(2*width_cball):
-                            img[i+k, j+l, :] = sphere2[k, l, :]
+                            if np.sqrt((k-width_cball)**2+(l-width_cball)**2)<=width_cball:
+                                img[i+k, j+l, :] = sphere2[k, l, :]
+                    width_cball = 0
                     break
 
     cv2.imshow("result", img)
@@ -71,6 +73,7 @@ def resize(img, scale_factor):
 
 #resize_image_manual(cv2.imread("CAU/image-processing/image_processing/sapin2.png"), 0.5)
 
+#to_tree(cv2.imread("CAU/image-processing/image_processing/fisheye_without_bg.png"))
 to_tree(cv2.imread("CAU/image-processing/image_processing/fisheye_team13.png"))
 
 
