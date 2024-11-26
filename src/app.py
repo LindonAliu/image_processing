@@ -16,7 +16,10 @@ import os
 import cv2
 import numpy as np
 from tkinter import filedialog
-from filters.custom_filters import apply_sepia_filter, apply_black_and_white_filter, apply_vintage_filter, apply_grain_filter, apply_pop_art_filter, apply_painting_filter, radial_color_gradient, glass_distortion_effect, posterize_filter
+from filters.gradient import apply_radial_color_gradient
+from filters.painting import apply_painting_filter
+from filters.popart import apply_pop_art_filter
+from filters.custom_filters import apply_sepia_filter, apply_black_and_white_filter, apply_vintage_filter, apply_grain_filter, glass_distortion_effect, posterize_filter
 from filters.fisheye import img_to_fisheye
 
 def is_image_file(filepath) -> bool:
@@ -40,7 +43,7 @@ class AppState:
             "Grain": apply_grain_filter,
             "Pop art": apply_pop_art_filter,
             "Painting": apply_painting_filter,
-            "Warm to Cold Gradient": radial_color_gradient,
+            "Warm to Cold Gradient": apply_radial_color_gradient,
             "Glass Distortion Effect": glass_distortion_effect,
             "Posterize": posterize_filter,
         }
