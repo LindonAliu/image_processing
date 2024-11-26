@@ -5,8 +5,10 @@
 ## gui: utils function for creating GUI elements
 ##
 
+from filters.fisheye import img_to_fisheye
+
 from tkinter import filedialog, messagebox, Canvas, Scrollbar
-from tkinter import Button, Label, Tk, Listbox, Frame
+from tkinter import Button, Label, Tk, Listbox, Frame, Scale
 from tkinter import LEFT, RIGHT, BOTH, Y, HORIZONTAL, VERTICAL, BOTTOM, X
 
 from PIL import Image, ImageTk
@@ -25,7 +27,7 @@ def on_filter_select(event, listbox, filters, apply_filter_callback):
         filter_function = filters[filter_name]
         apply_filter_callback(filter_function)
 
-def create_filter_frame(window: Tk, filters: dict, apply_filter_callback: callable, import_image_callback: callable,
+def create_filter_frame(window: Tk, filters: dict, pixel_array: np.ndarray, apply_filter_callback: callable, import_image_callback: callable,
                         save_image_in_file_action: callable, update_original_image_callback: callable) -> Frame:
     """Create a frame that contains the filter list and buttons."""
     frame = Frame(window, padx=10, pady=10)
@@ -33,6 +35,13 @@ def create_filter_frame(window: Tk, filters: dict, apply_filter_callback: callab
 
     import_button = Button(frame, text="Import image", command=lambda: import_image_action(import_image_callback))
     import_button.pack(pady=5)
+
+    k_scale = Scale(frame, from_=0.00001, to=0.0001, resolution=0.00001, orient=HORIZONTAL, label="k fisheye")
+    k_scale.set(0.00005)
+    k_scale.pack(pady=5)
+
+    fisheye_button = Button(frame, text="Fisheye", command=lambda: apply_filter_callback(lambda pixel_array: img_to_fisheye(pixel_array, k_scale.get())))
+    fisheye_button.pack(pady=5)
 
     listbox_label = Label(frame, text="Filters :")
     listbox_label.pack(pady=5)

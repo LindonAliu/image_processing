@@ -43,10 +43,9 @@ class AppState:
             "Warm to Cold Gradient": radial_color_gradient,
             "Glass Distortion Effect": glass_distortion_effect,
             "Posterize": posterize_filter,
-            "Fisheye": lambda pixel_array: img_to_fisheye(pixel_array, 0.00005),
         }
 
-        create_filter_frame(self.window, filters,
+        create_filter_frame(self.window, filters, self.pixel_array,
                             self.apply_filter, self.import_image, self.save_image_in_file, self.update_original_image)
         self.canvas, _ = create_image_frame(self.window)
 
