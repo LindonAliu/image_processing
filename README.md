@@ -20,7 +20,7 @@ pytest
 
 ## How to run the project ?
 
-Run the following command to run the project:
+Run the following command to run the project at the root of the directory:
 
 ```bash
 python src/main.py

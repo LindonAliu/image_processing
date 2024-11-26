@@ -6,6 +6,7 @@
 ##
 
 from filters.fisheye import img_to_fisheye
+from to_tree import to_tree
 
 from tkinter import filedialog, messagebox, Canvas, Scrollbar
 from tkinter import Button, Label, Tk, Listbox, Frame, Scale
@@ -57,6 +58,9 @@ def create_filter_frame(window: Tk, filters: dict, pixel_array: np.ndarray, appl
 
     save_button = Button(frame, text="Save image", command=lambda: update_original_image_callback())
     save_button.pack(pady=5)
+
+    christmas_button = Button(frame, text="Christmas", command=lambda: apply_filter_callback(lambda pixel_array: to_tree(pixel_array)))
+    christmas_button.pack(pady=5)
 
     return frame
 
