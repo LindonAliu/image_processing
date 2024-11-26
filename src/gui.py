@@ -26,7 +26,7 @@ def on_filter_select(event, listbox, filters, apply_filter_callback):
         apply_filter_callback(filter_function)
 
 def create_filter_frame(window: Tk, filters: dict, apply_filter_callback: callable, import_image_callback: callable,
-                        save_image_action: callable) -> Frame:
+                        save_image_in_file_action: callable, update_original_image_callback: callable) -> Frame:
     """Create a frame that contains the filter list and buttons."""
     frame = Frame(window, padx=10, pady=10)
     frame.pack(side=LEFT, fill=Y)
@@ -43,7 +43,10 @@ def create_filter_frame(window: Tk, filters: dict, apply_filter_callback: callab
     listbox.pack(pady=5)
     listbox.bind("<<ListboxSelect>>", lambda event: on_filter_select(event, listbox, filters, apply_filter_callback))
 
-    save_button = Button(frame, text="Save image", command=lambda: save_image_action())
+    save_in_file_button = Button(frame, text="Save image as", command=lambda: save_image_in_file_action())
+    save_in_file_button.pack(pady=5)
+
+    save_button = Button(frame, text="Save image", command=lambda: update_original_image_callback())
     save_button.pack(pady=5)
 
     return frame
