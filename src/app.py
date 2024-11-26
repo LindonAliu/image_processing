@@ -43,10 +43,10 @@ class AppState:
             "Warm to Cold Gradient": radial_color_gradient,
             "Glass Distortion Effect": glass_distortion_effect,
             "Posterize": posterize_filter,
-            "Fisheye": lambda pixel_array: img_to_fisheye(pixel_array, 0.00005),
         }
 
-        create_filter_frame(self.window, filters, self.apply_filter, self.import_image, self.save_image)
+        create_filter_frame(self.window, filters, self.pixel_array,
+                            self.apply_filter, self.import_image, self.save_image_in_file, self.update_original_image)
         self.canvas, _ = create_image_frame(self.window)
 
         self.canvas.bind("<Button-4>", self.zoom)
@@ -105,7 +105,14 @@ class AppState:
         else:
             display_error_message("Error: the filter could not be applied.")
 
-    def save_image(self):
+    def update_original_image(self):
+        if self.pixel_array is not None:
+            self.original_pixel_array = self.pixel_array.copy()
+            self.update_image()
+        else:
+            display_error_message("Error: no original image to display.")
+
+    def save_image_in_file(self):
         if self.pixel_array is not None:
             filename = filedialog.asksaveasfilename()
             if filename:
