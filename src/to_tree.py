@@ -11,7 +11,7 @@ import os
 
 
 def to_tree(sphere):
-    img = cv2.imread("./sapin.png")
+    img = cv2.imread("./assets/sapin.png")
     img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
 
     radius = sphere.shape[0]
