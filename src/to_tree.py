@@ -27,7 +27,7 @@ def to_tree(sphere):
                 if width_cball != 0:
                     width_cball +=1 #so that we don't loose if impair
                     width_cball = width_cball//2
-                    sphere2 = resize(sphere2, 2*width_cball/radius)
+                    sphere2 = resize(sphere, 2*width_cball/radius)
                 
                     i = i - width_cball
                     j = j - 2*width_cball
@@ -35,6 +35,8 @@ def to_tree(sphere):
                     for k in range(2*width_cball):
                         for l in range(2*width_cball):
                             if np.sqrt((k-width_cball)**2+(l-width_cball)**2)<=width_cball:
+                                if np.all(sphere2[k, l, :] == [0, 0, 0]):
+                                    sphere2[k, l, :] = [1, 1, 1]
                                 img[i+k, j+l, :] = sphere2[k, l, :]
                     width_cball = 0
                     break
