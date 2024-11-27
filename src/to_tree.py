@@ -25,8 +25,9 @@ def to_tree(sphere):
                 width_cball += 1
             else:
                 if width_cball != 0:
+                    width_cball +=1 #so that we don't loose if impair
                     width_cball = width_cball//2
-                    sphere2 = resize(sphere, 2*width_cball/radius)
+                    sphere2 = resize(sphere2, 2*width_cball/radius)
                 
                     i = i - width_cball
                     j = j - 2*width_cball
@@ -43,8 +44,8 @@ def resize(img, scale_factor):
     original_width, original_height = img.shape[:2]
     
     # reduced dim
-    new_width = int(original_width * scale_factor)
-    new_height = int(original_height * scale_factor)
+    new_width = round(original_width * scale_factor) 
+    new_height = round(original_height * scale_factor) 
     
     resized_img = np.zeros((new_width, new_height, 3), dtype=np.uint8)
     
@@ -57,3 +58,4 @@ def resize(img, scale_factor):
             resized_img[i, j] = img[orig_x, orig_y]
     
     return resized_img
+
