@@ -1,6 +1,6 @@
 # Image Processing Project
 
-Ce projet, est un projet de traitement d'image, qui détecte les visages dans une image.
+This image processing project allow the user to transform any image in fisheye effect, and to ass various filters.
 
 ## How to install dependencies ?
 
