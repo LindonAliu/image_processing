@@ -21,6 +21,7 @@ from filters.painting import apply_painting_filter
 from filters.popart import apply_pop_art_filter
 from filters.custom_filters import apply_sepia_filter, apply_black_and_white_filter, apply_vintage_filter, apply_grain_filter, glass_distortion_effect, posterize_filter
 from filters.fisheye import img_to_fisheye
+from to_tree import BGR2RGB
 
 def is_image_file(filepath) -> bool:
     return filepath.endswith('.jpg') or filepath.endswith('.png')
@@ -91,7 +92,8 @@ class AppState:
         if pixel_array is None:
             display_error_message("Error: The image could not be loaded.")
             return
-        pixel_array = cv2.cvtColor(pixel_array, cv2.COLOR_BGR2RGB)
+        #pixel_array = cv2.cvtColor(pixel_array, cv2.COLOR_BGR2RGB)
+        pixel_array = BGR2RGB(pixel_array)
 
         self.pixel_array = pixel_array
         self.original_pixel_array = pixel_array.copy()
