@@ -1,6 +1,6 @@
 # Image Processing Project
 
-This image processing project allow the user to transform any image in fisheye effect, and to ass various filters.
+This image processing project allow the user to transform any image in fisheye effect, and to add various filters.
 
 ## How to install dependencies ?
 
