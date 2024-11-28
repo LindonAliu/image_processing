@@ -7,6 +7,7 @@
 
 from filters.fisheye import img_to_fisheye
 from to_tree import to_tree
+import pygame
 
 from tkinter import filedialog, messagebox, Canvas, Scrollbar
 from tkinter import Button, Label, Tk, Listbox, Frame, Scale
@@ -61,6 +62,8 @@ def create_filter_frame(window: Tk, filters: dict, pixel_array: np.ndarray, appl
 
     christmas_button = Button(frame, text="Christmas", command=lambda: apply_filter_callback(lambda pixel_array: to_tree(pixel_array)))
     christmas_button.pack(pady=5)
+
+    pygame.mixer.init()
 
     return frame
 

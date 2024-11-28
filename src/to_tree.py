@@ -9,6 +9,7 @@ import cv2
 import numpy as np
 import os
 
+import pygame
 
 def to_tree(sphere):
     img = cv2.imread("./assets/sapin.png")
@@ -51,6 +52,8 @@ def to_tree(sphere):
 
 
                     break
+    pygame.mixer.music.load("./assets/music.mp3")
+    pygame.mixer.music.play()
     return img
 
 def resize(img, scale_factor):

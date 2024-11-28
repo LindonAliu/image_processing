@@ -1,4 +1,4 @@
 pytest
 opencv-python
 pillow
-numpy
+pygame
